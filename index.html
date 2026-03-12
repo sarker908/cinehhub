@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineHub - Movies & TV Shows Streaming</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header id="dynamic-header">
+        <div class="header-gradient"></div>
+        <div class="container">
+            <h1><i class="fas fa-film"></i> CineHub</h1>
+            <p>Your ultimate streaming destination</p>
+        </div>
+    </header>
+
+    <!-- Navigation Bar with Back Button -->
+    <div class="navigation-bar">
+        <div class="container">
+            <button id="back-button" class="back-btn" style="display: none;">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <div class="breadcrumb" id="breadcrumb">
+                <span class="breadcrumb-item active">Home</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <div class="nav-links">
+                <button class="nav-btn active" data-section="movies">
+                    <i class="fas fa-film"></i> Movies
+                </button>
+                <button class="nav-btn" data-section="tvshows">
+                    <i class="fas fa-tv"></i> TV Shows
+                </button>
+                <button class="nav-btn" id="watchlist-nav-btn">
+                    <i class="fas fa-bookmark"></i> Watchlist
+                </button>
+                <button class="nav-btn" id="continue-watching-nav-btn">
+                    <i class="fas fa-play-circle"></i> Continue Watching
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Movies Section (Home Page) -->
+    <section id="movies-section" class="content-section active">
+        <div class="container">
+            <!-- Movies Navigation -->
+            <nav class="section-nav">
+                <button class="section-nav-btn active" data-movie-endpoint="movie/now_playing">
+                    <i class="fas fa-play-circle"></i> Now Playing
+                </button>
+                <button class="section-nav-btn" data-movie-endpoint="movie/popular">
+                    <i class="fas fa-fire"></i> Popular
+                </button>
+                <button class="section-nav-btn" data-movie-endpoint="movie/top_rated">
+                    <i class="fas fa-star"></i> Top Rated
+                </button>
+                <button class="section-nav-btn" data-movie-endpoint="movie/upcoming">
+                    <i class="fas fa-calendar-alt"></i> Upcoming
+                </button>
+            </nav>
+
+            <!-- Movies Search and Filters -->
+            <div class="filters-wrapper">
+                <div class="search-container" style="position: relative;">
+                    <select id="movie-search-type" class="search-type-select">
+                        <option value="movie">Movies</option>
+                        <option value="tv">TV Shows</option>
+                        <option value="actor">Actors</option>
+                    </select>
+                    <input type="text" id="movie-search" placeholder="Search..." class="search-input" autocomplete="off">
+                    <button class="search-btn" id="movie-search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <!-- Suggestions Dropdown -->
+                    <div id="movie-suggestions" class="suggestions-dropdown"></div>
+                </div>
+
+                <div class="filters-grid">
+                    <select id="movie-genre" class="filter-select">
+                        <option value="">All Genres</option>
+                    </select>
+
+                    <select id="movie-year" class="filter-select">
+                        <option value="">All Years</option>
+                    </select>
+
+                    <select id="movie-rating" class="filter-select">
+                        <option value="0">Any Rating</option>
+                        <option value="7">7+ Stars</option>
+                        <option value="8">8+ Stars</option>
+                        <option value="9">9+ Stars</option>
+                    </select>
+
+                    <select id="movie-language" class="filter-select">
+                        <option value="">All Languages</option>
+                        <option value="en">English</option>
+                        <option value="hi">Hindi</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="it">Italian</option>
+                        <option value="pt">Portuguese</option>
+                        <option value="ru">Russian</option>
+                        <option value="ja">Japanese</option>
+                        <option value="ko">Korean</option>
+                        <option value="zh">Chinese</option>
+                        <option value="ar">Arabic</option>
+                        <option value="tr">Turkish</option>
+                        <option value="nl">Dutch</option>
+                        <option value="sv">Swedish</option>
+                        <option value="da">Danish</option>
+                        <option value="no">Norwegian</option>
+                        <option value="fi">Finnish</option>
+                        <option value="pl">Polish</option>
+                        <option value="cs">Czech</option>
+                    </select>
+
+                    <button id="movie-apply-filters" class="filter-btn">
+                        <i class="fas fa-sliders-h"></i> Apply Filters
+                    </button>
+
+                    <button id="movie-reset-filters" class="reset-btn">
+                        <i class="fas fa-undo"></i> Reset Filters
+                    </button>
+
+                    <button id="movie-random" class="random-btn">
+                        <i class="fas fa-dice"></i> Random Movie
+                    </button>
+                </div>
+            </div>
+
+            <!-- Movies Results -->
+            <div class="results-section">
+                <div id="movie-loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading amazing movies...</p>
+                </div>
+                <div id="movie-grid" class="content-grid"></div>
+                <div class="load-more-container">
+                    <button id="movie-load-more" class="btn load-more">Load More Movies</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TV Shows Section -->
+    <section id="tvshows-section" class="content-section">
+        <div class="container">
+            <!-- TV Shows Navigation -->
+            <nav class="section-nav">
+                <button class="section-nav-btn active" data-tv-endpoint="tv/airing_today">
+                    <i class="fas fa-calendar-day"></i> Airing Today
+                </button>
+                <button class="section-nav-btn" data-tv-endpoint="tv/popular">
+                    <i class="fas fa-fire"></i> Popular
+                </button>
+                <button class="section-nav-btn" data-tv-endpoint="tv/top_rated">
+                    <i class="fas fa-star"></i> Top Rated
+                </button>
+                <button class="section-nav-btn" data-tv-endpoint="tv/on_the_air">
+                    <i class="fas fa-tv"></i> On TV
+                </button>
+            </nav>
+
+            <!-- TV Shows Search and Filters -->
+            <div class="filters-wrapper">
+                <div class="search-container" style="position: relative;">
+                    <select id="tv-search-type" class="search-type-select">
+                        <option value="tv">TV Shows</option>
+                        <option value="movie">Movies</option>
+                        <option value="actor">Actors</option>
+                    </select>
+                    <input type="text" id="tv-search" placeholder="Search..." class="search-input" autocomplete="off">
+                    <button class="search-btn" id="tv-search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <!-- Suggestions Dropdown -->
+                    <div id="tv-suggestions" class="suggestions-dropdown"></div>
+                </div>
+
+                <div class="filters-grid">
+                    <select id="tv-genre" class="filter-select">
+                        <option value="">All Genres</option>
+                    </select>
+
+                    <select id="tv-year" class="filter-select">
+                        <option value="">All Years</option>
+                    </select>
+
+                    <select id="tv-rating" class="filter-select">
+                        <option value="0">Any Rating</option>
+                        <option value="7">7+ Stars</option>
+                        <option value="8">8+ Stars</option>
+                        <option value="9">9+ Stars</option>
+                    </select>
+
+                    <select id="tv-language" class="filter-select">
+                        <option value="">All Languages</option>
+                        <option value="en">English</option>
+                        <option value="hi">Hindi</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="it">Italian</option>
+                        <option value="pt">Portuguese</option>
+                        <option value="ru">Russian</option>
+                        <option value="ja">Japanese</option>
+                        <option value="ko">Korean</option>
+                        <option value="zh">Chinese</option>
+                        <option value="ar">Arabic</option>
+                        <option value="tr">Turkish</option>
+                        <option value="nl">Dutch</option>
+                        <option value="sv">Swedish</option>
+                        <option value="da">Danish</option>
+                        <option value="no">Norwegian</option>
+                        <option value="fi">Finnish</option>
+                        <option value="pl">Polish</option>
+                        <option value="cs">Czech</option>
+                    </select>
+
+                    <button id="tv-apply-filters" class="filter-btn">
+                        <i class="fas fa-sliders-h"></i> Apply Filters
+                    </button>
+
+                    <button id="tv-reset-filters" class="reset-btn">
+                        <i class="fas fa-undo"></i> Reset Filters
+                    </button>
+
+                    <button id="tv-random" class="random-btn">
+                        <i class="fas fa-dice"></i> Random Show
+                    </button>
+                </div>
+            </div>
+
+            <!-- TV Shows Results -->
+            <div class="results-section">
+                <div id="tv-loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading amazing TV shows...</p>
+                </div>
+                <div id="tv-grid" class="content-grid"></div>
+                <div class="load-more-container">
+                    <button id="tv-load-more" class="btn load-more">Load More Shows</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Episode Selector Modal (for TV Shows) -->
+    <div id="episode-modal" class="episode-modal">
+        <div class="episode-modal-content">
+            <span class="close-episode">&times;</span>
+            <div id="episode-modal-body">
+                <!-- Dynamic content for episodes -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Watchlist Modal -->
+    <div id="watchlist-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-watchlist">&times;</span>
+            <h2 class="modal-title"><i class="fas fa-bookmark"></i> My Watchlist</h2>
+            <div id="watchlist-grid" class="content-grid"></div>
+        </div>
+    </div>
+
+    <!-- Continue Watching Modal -->
+    <div id="continue-watching-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-continue">&times;</span>
+            <h2 class="modal-title"><i class="fas fa-play-circle"></i> Continue Watching</h2>
+            <div id="continue-watching-grid" class="content-grid"></div>
+        </div>
+    </div>
+
+    <!-- Streaming Modal with Navigation -->
+    <div id="streaming-modal" class="streaming-modal">
+        <div class="streaming-modal-content">
+            <span class="close-streaming">&times;</span>
+            
+           <!-- Modal Navigation -->
+<div class="modal-navigation">
+    <button class="modal-nav-btn" id="modal-back-btn" title="Previous">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+    <button class="modal-nav-btn" id="modal-forward-btn" title="Next" disabled>
+        <i class="fas fa-arrow-right"></i>
+    </button>
+    <div class="modal-breadcrumb" id="modal-breadcrumb"> 
+        <!-- Dynamic breadcrumb -->
+    </div>
+</div>
+
+<div id="streaming-container">
+    <div class="streaming-info" id="streaming-info">
+        <!-- Dynamic content -->
+    </div>
+                
+                <!-- Episode Navigation for TV Shows -->
+                <div class="episode-navigation" id="episode-navigation" style="display: none;">
+                    <button class="episode-nav-btn" id="prev-episode-btn" disabled>
+                        <i class="fas fa-chevron-left"></i> Previous Episode
+                    </button>
+                    <div class="episode-info-display" id="episode-info-display">
+                        <span id="current-episode-display"></span>
+                    </div>
+                    <button class="episode-nav-btn" id="next-episode-btn" disabled>
+                        Next Episode <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="streaming-header">
+                    <h3><i class="fas fa-video"></i> Available Streaming Sources</h3>
+                    <div class="streaming-status">
+                        <span class="status-badge" id="source-count">25 sources available</span>
+                    </div>
+                </div>
+                
+                <div class="sources-container">
+                    <div class="source-tabs">
+                        <button class="source-tab active" data-filter="all">
+                            <i class="fas fa-globe"></i> All Sources
+                        </button>
+                        <button class="source-tab" data-filter="hd">
+                            <i class="fas fa-hd"></i> HD Quality
+                        </button>
+                        <button class="source-tab" data-filter="4k">
+                            <i class="fas fa-film"></i> 4K Ultra
+                        </button>
+                    </div>
+                    
+                    <div id="sources-loading" class="sources-loading" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Loading sources...</p>
+                    </div>
+                    
+                    <div id="sources-grid" class="sources-grid">
+                        <!-- Sources will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="progress-container" id="progress-container" style="display: none;">
+                    <div class="progress-info">
+                        <span id="progress-time">0:00</span>
+                        <span id="progress-duration">0:00</span>
+                    </div>
+                    <div class="progress-bar" id="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <button class="save-progress-btn" id="save-progress-btn">
+                        <i class="fas fa-save"></i> Save Progress
+                    </button>
+                </div>
+                
+                <div class="streaming-player-container" id="streaming-player-container" style="display: none;">
+                    <div class="player-header">
+                        <h4><i class="fas fa-play-circle"></i> <span id="now-playing-title">Now Playing</span></h4>
+                        <div class="player-controls">
+                            <button class="player-control-btn" onclick="toggleFullscreen()">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="player-control-btn" onclick="stopStreaming()">
+                                <i class="fas fa-stop"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="player-iframe-container" class="player-iframe-container"></div>
+                    <div class="player-footer">
+                        <span id="current-source-badge" class="source-badge"></span>
+                        <span id="stream-quality" class="quality-badge"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Similar Content Modal -->
+    <div id="similar-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-similar">&times;</span>
+            <h2 class="modal-title" id="similar-title"><i class="fas fa-film"></i> Similar Content</h2>
+            <div id="similar-grid" class="content-grid"></div>
+        </div>
+    </div>
+
+    <!-- Cast Details Modal -->
+    <div id="cast-modal" class="modal">
+        <div class="modal-content cast-modal-content">
+            <span class="close-cast">&times;</span>
+            <div id="cast-details">
+                <!-- Dynamic cast content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- History Navigation (Bottom) -->
+    <div class="history-indicator" id="history-indicator" style="display: none;">
+        <button class="history-btn" id="history-prev" disabled>
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <button class="history-btn" id="history-next" disabled>
+            <i class="fas fa-arrow-right"></i>
+        </button>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4><i class="fas fa-film"></i> CineHub</h4>
+                    <p>Your premium streaming destination for movies and TV shows.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#" onclick="switchToMovies()">Movies</a></li>
+                        <li><a href="#" onclick="switchToTVShows()">TV Shows</a></li>
+                        <li><a href="#" id="footer-watchlist">My Watchlist</a></li>
+                        <li><a href="#" id="footer-continue">Continue Watching</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Powered by NS | &copy; <span id="current-year"></span> CineHub</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
